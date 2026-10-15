@@ -1,0 +1,233 @@
+
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-copy">
+        <div class="eyebrow">
+            <span class="pulse"></span> ECE CAMPUS GAMING SERIES
+        </div>
+
+        <h1>PLAY HARD.<br><em>RULE THE ZONE.</em></h1>
+
+        <p>
+            One arena. Nine games. Your chance to rise. Register your squad,
+            track match results, and battle your way up the Esport Warzone leaderboard.
+        </p>
+
+        <div class="hero-actions">
+            <a class="btn primary" href="{{ url_for('register') }}">Enter the Warzone ↗</a>
+            <a class="btn ghost" href="{{ url_for('leaderboard_page') }}">View rankings</a>
+        </div>
+
+        <div class="hero-note">
+            <span>●</span> MULTI-GAME CAMPUS EVENT <i>·</i> SEASON 2026
+        </div>
+    </div>
+
+    <div class="hero-art">
+        <div class="art-ring ring1"></div>
+        <div class="art-ring ring2"></div>
+        <div class="art-glow"></div>
+        <div class="crosshair">+</div>
+        <div class="art-tag tag-top">SQUAD<br><b>UP</b></div>
+        <div class="art-tag tag-bottom">
+            <small>YOUR GAME.</small><b>YOUR GLORY.</b>
+        </div>
+        <div class="art-center">EW<span>ESPORT WARZONE</span></div>
+    </div>
+</section>
+
+{% if not db_connected %}
+<div class="flash error">
+    MySQL is not connected. Start MySQL Server and refresh to enable registrations and scores.
+</div>
+{% endif %}
+
+<section class="stats">
+    <div>
+        <small>REGISTERED TEAMS</small>
+        <strong>{{ team_count }}</strong>
+        <span>Squads in the arena</span>
+    </div>
+    <div>
+        <small>PLAYERS JOINED</small>
+        <strong>{{ player_count }}</strong>
+        <span>Gamers ready</span>
+    </div>
+    <div>
+        <small>GAME EVENTS</small>
+        <strong>{{ match_count }}</strong>
+        <span>Challenges loaded</span>
+    </div>
+    <div>
+        <small>TOURNAMENT STATUS</small>
+        <strong class="status">OPEN</strong>
+        <span>Registration active</span>
+    </div>
+</section>
+
+<section class="section">
+    <div class="section-heading">
+        <div>
+            <div class="eyebrow">CHOOSE YOUR ARENA</div>
+            <h2>Games <em>line-up</em></h2>
+        </div>
+        <span class="section-index">01 / 09 GAMES</span>
+    </div>
+
+    <div class="game-grid">
+        <article class="game-tile">
+            <img class="game-image" src="{{ url_for('static', filename='images/free_fire.jpg') }}" alt="Free Fire battle royale game artwork" loading="lazy">
+            <span>01</span><h3>Free Fire</h3><p>Battle Royale</p>
+        </article>
+
+        <article class="game-tile">
+            <img class="game-image" src="{{ url_for('static', filename='images/bgmi.jpg') }}" alt="BGMI battle royale game artwork" loading="lazy">
+            <span>02</span><h3>BGMI</h3><p>Battle Royale</p>
+        </article>
+
+        <article class="game-tile">
+            <img class="game-image" src="{{ url_for('static', filename='images/candy_crush.jpg') }}" alt="Candy Crush puzzle game artwork" loading="lazy">
+            <span>03</span><h3>Candy Crush Saga</h3><p>Puzzle Challenge</p>
+        </article>
+
+        <article class="game-tile">
+            <img class="game-image" src="{{ url_for('static', filename='images/subway_surfers.jpg') }}" alt="Subway Surfers runner game artwork" loading="lazy">
+            <span>04</span><h3>Subway Surfers</h3><p>Endless Runner</p>
+        </article>
+
+        <article class="game-tile">
+            <img class="game-image" src="{{ url_for('static', filename='images/temple_run.jpg') }}" alt="Temple Run game artwork" loading="lazy">
+            <span>05</span><h3>Temple Run</h3><p>Endless Runner</p>
+        </article>
+
+        <article class="game-tile">
+            <img class="game-image" src="{{ url_for('static', filename='images/mobile_legends.jpg') }}" alt="Mobile Legends fantasy game artwork" loading="lazy">
+            <span>06</span><h3>Mobile Legends: Bang Bang</h3><p>MOBA</p>
+        </article>
+
+        <article class="game-tile">
+            <img class="game-image" src="{{ url_for('static', filename='images/dr_driving.jpg') }}" alt="Dr. Driving game artwork" loading="lazy">
+            <span>07</span><h3>Dr. Driving</h3><p>Driving Challenge</p>
+        </article>
+
+        <article class="game-tile">
+            <img class="game-image" src="{{ url_for('static', filename='images/angry_birds.jpg') }}" alt="Angry Birds game artwork" loading="lazy">
+            <span>08</span><h3>Angry Birds</h3><p>Aim-Off</p>
+        </article>
+
+        <article class="game-tile">
+            <img class="game-image" src="{{ url_for('static', filename='images/bubble_shooter.jpg') }}" alt="Bubble Shooter game artwork" loading="lazy">
+            <span>09</span><h3>Bubble Shooter</h3><p>Arcade Challenge</p>
+        </article>
+    </div>
+</section>
+
+<section class="section">
+    <div class="section-heading">
+        <div>
+            <div class="eyebrow">EVENT CALENDAR</div>
+            <h2>Upcoming <em>challenges</em></h2>
+        </div>
+        <span class="section-index">02 / SCHEDULE</span>
+    </div>
+
+    <div class="match-grid">
+        {% for m in matches %}
+        <article class="match-card">
+            <div class="match-top">
+                <span class="match-num">{{ m.game_name|upper }}</span>
+                <span class="pill">{{ m.status }}</span>
+            </div>
+
+            <div class="map-symbol">⌖</div>
+            <h3>{{ m.match_name }}</h3>
+            <p>Arena: <b>{{ m.arena }}</b></p>
+
+            {% if m.start_at %}
+                <p class="schedule-time">
+                    🗓 {{ m.start_at.strftime('%d %b %Y · %I:%M %p') }}
+                </p>
+            {% else %}
+                <p class="schedule-time">Time to be announced</p>
+            {% endif %}
+
+            <div class="match-bottom">
+                <span>Esport Warzone</span><span>↗</span>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="section">
+    <div class="section-heading">
+        <div>
+            <div class="eyebrow">OFFICIAL UPDATES</div>
+            <h2>Tournament <em>announcements</em></h2>
+        </div>
+        <a class="text-link" href="{{ url_for('schedule_page') }}">Full schedule &amp; news ↗</a>
+    </div>
+
+    <div class="announcement-grid">
+        {% for a in announcements %}
+        <article class="announcement-card">
+            <div class="match-top">
+                <span class="pill">{{ a.category }}</span>
+                <small>{{ a.created_at.strftime('%d %b %Y') if a.created_at else '' }}</small>
+            </div>
+            <h3>{{ a.title }}</h3>
+            <p>{{ a.body }}</p>
+        </article>
+        {% else %}
+        <div class="empty">
+            Tournament announcements will appear here when the admin publishes them.
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="section">
+    <div class="section-heading">
+        <div>
+            <div class="eyebrow">THE RACE TO #1</div>
+            <h2>Top <em>squads</em></h2>
+        </div>
+        <a class="text-link" href="{{ url_for('leaderboard_page') }}">Full leaderboard ↗</a>
+    </div>
+
+    {% if leaderboard %}
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>RANK</th>
+                    <th>TEAM</th>
+                    <th>GAME</th>
+                    <th>KILLS</th>
+                    <th>POINTS</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in leaderboard %}
+                <tr>
+                    <td class="rank">#{{ "%02d"|format(loop.index) }}</td>
+                    <td>{{ row.team_name }}</td>
+                    <td>{{ row.game_name }}</td>
+                    <td>{{ row.kills }}</td>
+                    <td class="points">{{ row.points }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty">
+        No scores yet. Register a team and enter match results to start the leaderboard.
+    </div>
+    {% endif %}
+</section>
+
+{% endblock %}

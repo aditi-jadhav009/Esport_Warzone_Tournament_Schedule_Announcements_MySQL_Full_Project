@@ -1,0 +1,6 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Home{% endblock %} | Esport Warzone</title><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head><body>
+<header class="topbar"><a class="brand" href="{{ url_for('index') }}"><span class="brand-mark">EW</span><span>ESPORT <b>WARZONE</b><small>ECE · DBMS TOURNAMENT</small></span></a>
+<nav><a href="{{ url_for('index') }}">Home</a><a href="{{ url_for('teams_page') }}">Teams</a><a href="{{ url_for('leaderboard_page') }}">Leaderboard</a><a href="{{ url_for('schedule_page') }}">Schedule & news</a><a href="{{ url_for('dbms_lab') }}">DBMS Lab</a><a href="{{ url_for('player_login') }}">Player zone</a><a href="{{ url_for('admin_login') }}">Admin</a><a class="nav-cta" href="{{ url_for('player_register') }}">Register player ↗</a></nav></header>
+<main>{% with messages = get_flashed_messages(with_categories=true) %}{% if messages %}{% for category, message in messages %}<div class="flash {{ category }}">{{ message }}</div>{% endfor %}{% endif %}{% endwith %}{% block content %}{% endblock %}</main>
+<footer><span>ESPORT WARZONE · SPPU ECE DBMS PROJECT</span><span>Python · Flask · MySQL</span></footer><script src="{{ url_for('static', filename='main.js') }}"></script></body></html>

@@ -1,0 +1,28 @@
+{% extends "base.html" %}{% block title %}DBMS Lab{% endblock %}{% block content %}
+<section class="page-head"><div class="eyebrow">GROUP C · DATABASE PROGRAMMING LANGUAGES — SQL</div><h1>MySQL <em>lab book</em></h1><p>Examples connected to Esport Warzone for your SPPU ECE DBMS project using MySQL Workbench.</p></section>
+<div class="lab-grid"><article class="lab-card"><span class="lab-number">07</span><h2>CRUD + logical operators</h2><p>Create, Read, Update, Delete and save-style upserts.</p><pre><code>db.teams.find({ $or: [
+ { game_name: "Free Fire" },
+ { game_name: "BGMI" }
+] })
+
+db.teams.replaceOne(
+ { team_name: "Shadow Strikers" },
+ { team_name: "Shadow Strikers",
+   game_name: "BGMI" },
+ { upsert: true }
+)</code></pre></article>
+<article class="lab-card"><span class="lab-number">08</span><h2>Aggregation + indexing</h2><pre><code>SELECT game_name, SUM(points) AS total_points FROM results GROUP BY game_name;\n\n-- See mysql_examples.sql for complete queries.
+ { $group: {
+   _id: "$game_name",
+   totalPoints: { $sum: "$points" },
+   totalKills: { $sum: "$kills" }
+ }},
+ { $sort: { totalPoints: -1 } }
+])
+
+db.teams.createIndex(
+ { game_name: 1, team_name: 1 }
+)</code></pre></article>
+<article class="lab-card"><span class="lab-number">09</span><h2>Map-reduce</h2><p>A legacy syllabus example and a modern aggregation equivalent are included in the source folder.</p></article>
+<article class="lab-card"><span class="lab-number">10</span><h2>Database application</h2><p>Flask front end, MySQL backend, data validation, team registration, and score reporting.</p><ul><li>ER-style model and data dictionary</li><li>Normalization discussion</li><li>Testing document</li><li>Project report</li></ul></article></div>
+<div class="admin-hint">This version uses MySQL Server and MySQL Workbench. Run the examples in <code>mysql_examples.sql</code> from Workbench.</div>{% endblock %}
